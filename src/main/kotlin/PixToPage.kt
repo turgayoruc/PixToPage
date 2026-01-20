@@ -73,6 +73,32 @@ fun createPdfFromImages(images: List<File>, outputPdf: String) {
         contentStream.close()
     }
 
+   //Sol ust koseye sayfa numarasi eklemek icin
+    val pages = document.pages
+    var pageIndex = 1
+
+    for (page in pages) {
+        val cs = PDPageContentStream(
+            document,
+            page,
+            PDPageContentStream.AppendMode.APPEND,
+            true,
+            true
+        )
+
+        cs.beginText()
+        cs.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA_BOLD, 14f)
+
+        // Sol üst köşe (20px sağda, sayfanın en üstünden 20px aşağıda)
+        cs.newLineAtOffset(20f, page.mediaBox.height - 30f)
+
+        cs.showText("${pageIndex})")
+        cs.endText()
+        cs.close()
+
+        pageIndex++
+    }
+
     document.save(outputPdf)
     document.close()
 }
